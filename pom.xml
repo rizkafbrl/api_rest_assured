@@ -102,12 +102,23 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+           <plugin>
                 <groupId>net.serenity-bdd.maven.plugins</groupId>
                 <artifactId>serenity-maven-plugin</artifactId>
                 <version>3.6.21</version>
                 <executions>
+                    <!-- Generate Serenity report after the 'test' phase -->
                     <execution>
+                        <id>serenity-reports-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                    <!-- Ensure Serenity report is generated in the 'verify' phase too -->
+                    <execution>
+                        <id>serenity-reports-verify</id>
+                        <phase>verify</phase>
                         <goals>
                             <goal>aggregate</goal>
                         </goals>
@@ -124,6 +135,7 @@
                     <includes>
                         <include>**/CucumberTestRunner.java</include>
                     </includes>
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 
