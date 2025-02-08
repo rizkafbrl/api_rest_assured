@@ -102,6 +102,19 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <groupId>net.serenity-bdd.maven.plugins</groupId>
+                <artifactId>serenity-maven-plugin</artifactId>
+                <version>3.6.21</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
             <!-- Maven Surefire Plugin for Running JUnit Tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

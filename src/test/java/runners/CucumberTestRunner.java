@@ -2,10 +2,12 @@
 package runners;
 
 import net.serenitybdd.cucumber.CucumberWithSerenity;
+import net.serenitybdd.junit.runners.SerenityRunner;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(CucumberWithSerenity.class)
+// @RunWith(SerenityRunner.class)
 @CucumberOptions(
         features = "src/test/resources/features/",
         glue = "steps",
