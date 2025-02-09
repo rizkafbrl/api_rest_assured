@@ -28,7 +28,7 @@ Scenario: Update pet name
   And the response should contain pet name "Tarzan" and status "pending"
 
 @negativecase
-Scenario: Update pet id with null value
+Scenario Outline: Update pet id with characters
   Given the pet store API is available
   When I send a "PUT" request to create a pet with name "George", status "pending", and pet ID "<id>"
   Then the response status code should be 500
@@ -78,7 +78,7 @@ Scenario Outline: Get pets by status
     | sold       |
 
 @negativecase
-Scenario Outline: Update pet name and status by invalid ID
+Scenario: Update pet name and status by invalid ID
   Given the pet store API is available
   When I update the pet with ID "0" to name "John Doe" and status "other"
   Then the response status code should be 404
