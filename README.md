@@ -49,18 +49,20 @@ The project uses the following dependencies:
 To run all tests, use the following Maven command:
 
 ```sh
-mvn clean verify
+mvn clean test
 ```
+
+
 
 Running Specific Scenarios
 You can run specific scenarios using tags. The available tags are:
 
 @allcases: Run all test cases
 
-### @userpositive: 
+### @userpositivecase: 
 Run positive test cases for user API
 
-### @usernegative: 
+### @usernegativecase: 
 Run negative test cases for user API
 
 ### @petpositivecase: 
@@ -71,16 +73,16 @@ Run negative test cases for pet API
 
 ### To run tests with a specific tag, use the following Maven command:
 ```sh
-mvn clean verify -Dcucumber.filter.tags="@tagname"
+mvn test -Dcucumber.filter.tags="@tagname"
 ```
 ### Replace @tagname with the desired tag, for example:
 ```sh
-mvn clean verify -Dcucumber.filter.tags="@userpositive"
+mvn test -Dcucumber.filter.tags="@userpositivecase"
 ```
 ### Running Specific Feature Files
 To run a specific feature file, use the following Maven command:
 ```sh
-mvn clean verify -Dcucumber.features="src/test/resources/features/feature_file_name.feature"
+mvn test -Dcucumber.features="src/test/resources/features/feature_file_name.feature"
 ```
 
 ## Serenity Reports
