@@ -2,7 +2,6 @@
 package runners;
 
 import net.serenitybdd.cucumber.CucumberWithSerenity;
-import net.serenitybdd.junit.runners.SerenityRunner;
 import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 

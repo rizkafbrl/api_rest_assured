@@ -4,18 +4,13 @@ package steps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.And;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import net.serenitybdd.core.Serenity;
-
-import org.junit.Assert;
-
-import com.google.gson.Gson;
-
 import java.util.HashMap;
+import org.junit.Assert;
 import java.util.List;
 import java.util.Map;
 import java.io.File;
@@ -178,12 +173,10 @@ public class CommonSteps {
         System.out.println(" Successfully deleted pet with ID: " + petId);
     }
 
-
     @Then("the response should contain pet ID {int}")
     public void the_response_should_contain_pet_ID(int petId) {
         response.then().body("id", equalTo(petId));
     }
-
 
     @Then("the response status code should be {int}")
     public void the_response_status_code_should_be(int expectedStatusCode) {
@@ -201,8 +194,6 @@ public class CommonSteps {
     public void the_response_should_contain_message(String expectedMessage) {
       response.then().body("message", containsString(expectedMessage));
     }
-
-
     
     @Given("User retrieves the JSON template {string}")
     public void user_retrieves_the_json_template(String templateName) throws IOException {
@@ -283,7 +274,4 @@ public class CommonSteps {
                 .body("username", equalTo(username));
              
     }
-
-
-
 }
