@@ -57,13 +57,17 @@ You can run specific scenarios using tags. The available tags are:
 
 @allcases: Run all test cases
 
-@userpositive: Run positive test cases for user API
+### @userpositive: 
+Run positive test cases for user API
 
-@usernegative: Run negative test cases for user API
+### @usernegative: 
+Run negative test cases for user API
 
-@petpositivecase: Run positive test cases for pet API
+### @petpositivecase: 
+Run positive test cases for pet API
 
-@petnegativecase: Run negative test cases for pet API
+### @petnegativecase: 
+Run negative test cases for pet API
 
 ### To run tests with a specific tag, use the following Maven command:
 ```sh
