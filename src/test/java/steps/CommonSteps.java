@@ -4,6 +4,7 @@ package steps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.And;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -12,18 +13,25 @@ import net.serenitybdd.core.Serenity;
 
 import org.junit.Assert;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
-public class PetStoreSteps {
+public class CommonSteps {
     
     private Response response;
-    private static final String BASE_URL = "https://petstore.swagger.io/v2/pet";
-    private static String savedPetId;
+    private static final String BASE_URL = "https://petstore.swagger.io/v2";
+    private String jsonTemplate;
+    private String finalEndpoint;
 
 
     @Given("the pet store API is available")
@@ -32,7 +40,7 @@ public class PetStoreSteps {
     }
 
     @When("I send a {string} request to create a pet with name {string}, status {string}, and pet ID {string}")
-    public void i_send_a_POST_request_to_create_a_pet(String method, String name, String status, String petId) {
+    public void send_request_to_create_a_pet(String method, String name, String status, String petId) {
         Map<String, Object> petData = new HashMap<>();
    
         petData.put("id", petId.isEmpty() ? null : petId); //Check if petId is empty
@@ -58,7 +66,7 @@ public class PetStoreSteps {
                   .contentType(ContentType.JSON)
                   .body(petData)
                   .when()
-                  .post(BASE_URL)
+                  .post(BASE_URL + "/pet")
                   .then()
                   .extract()
                   .response();
@@ -68,7 +76,7 @@ public class PetStoreSteps {
                   .contentType(ContentType.JSON)
                   .body(petData)
                   .when()
-                  .put(BASE_URL)
+                  .put(BASE_URL + "/pet")
                   .then()
                   .extract()
                   .response();
@@ -79,7 +87,7 @@ public class PetStoreSteps {
     }
 
     @When("I upload an image {string} for pet ID {int} with metadata {string}")
-    public void i_upload_an_image_for_pet_with_metadata(String filePath, int petId, String metadata) {
+    public void upload_an_image_for_pet_with_metadata(String filePath, int petId, String metadata) {
       File file = new File("src/test/resources/images/" + filePath);
 
          // Check if file exists
@@ -104,44 +112,44 @@ public class PetStoreSteps {
           .multiPart("file", file)
           .multiPart("additionalMetadata", metadata)
           .when()
-          .post(BASE_URL + "/" + petId + "/uploadImage")
+          .post(BASE_URL + "/pet" + "/" + petId + "/uploadImage")
           .then()
           .extract()
           .response();
 }
 
     @When("I retrieve pet details for pet ID {int}")
-    public void i_retrieve_pet_details_for_pet_ID(int petId) {
+    public void retrieve_pet_details_for_pet_ID(int petId) {
         response = given()
                 .accept(ContentType.JSON)
                 .when()
-                .get(BASE_URL + "/" +petId)
+                .get(BASE_URL + "/pet" + "/" +petId)
                 .then()
                 .extract()
                 .response();
     }
 
     @When("I retrieve pets with status {string}")
-    public void i_retrieve_pets_with_status(String status) {
+    public void retrieve_pets_with_status(String status) {
     response = given()
             .accept(ContentType.JSON)
             .queryParam("status", status)
             .when()
-            .get(BASE_URL + "/findByStatus")
+            .get(BASE_URL + "/pet" + "/findByStatus")
             .then()
             .extract()
             .response();
     }
 
     @When("I update the pet with ID {string} to name {string} and status {string}")
-    public void i_update_the_pet_with_id_to_name_and_status(String petId, String name, String status) {
+    public void update_the_pet_with_id_to_name_and_status(String petId, String name, String status) {
     response = given()
             .accept(ContentType.JSON)
             .contentType("application/x-www-form-urlencoded")
             .formParam("name", name)
             .formParam("status", status)
             .when()
-            .post(BASE_URL + "/"+ petId)
+            .post(BASE_URL + "/pet" + "/"+ petId)
             .then()
             .extract()
             .response();
@@ -162,7 +170,7 @@ public class PetStoreSteps {
                 .accept(ContentType.JSON)
                 .header("api_key", "your_api_key") // Replace with actual API key
                 .when()
-                .delete(BASE_URL + "/" + petId)
+                .delete(BASE_URL + "/pet" + "/" + petId)
                 .then()
                 .extract()
                 .response();
@@ -193,4 +201,89 @@ public class PetStoreSteps {
     public void the_response_should_contain_message(String expectedMessage) {
       response.then().body("message", containsString(expectedMessage));
     }
+
+
+    
+    @Given("User retrieves the JSON template {string}")
+    public void user_retrieves_the_json_template(String templateName) throws IOException {
+        // Read JSON template from file
+        String filePath = "src/test/resources/templates/" + templateName + ".json";
+        jsonTemplate = new String(Files.readAllBytes(Paths.get(filePath)));
+    }
+
+    
+    @When("User sends a POST request to {string}")
+    public void user_sends_a_post_request_to(String finalEndpoint) {
+
+                response = given()
+                .baseUri(BASE_URL)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(jsonTemplate)
+                .when()
+                .post(finalEndpoint)
+                .then()
+                .extract()
+                .response();
+
+        // Debugging: Print response body
+        System.out.println("Response Body: " + response.getBody().asString());
+        }
+
+     @When("User updates the id field to a string")
+    public void user_updates_the_id_field_to_a_string() {
+        JsonPath jsonPath = new JsonPath(jsonTemplate);
+        List<Map<String, Object>> users = jsonPath.getList("$");
+        users.get(0).put("id", "test");
+        jsonTemplate = users.toString().replace("=", ":");
+        System.out.println("Updated JSON Template: " + jsonTemplate);
+    }
+
+
+    @Given("User sets the endpoint {string} with username {string}")
+    public void user_sets_the_endpoint_with_username(String endpoint, String username) {
+        finalEndpoint = endpoint + "/" + username;
+
+        System.out.println("Final Endpoint: " + BASE_URL + finalEndpoint);
+    }
+
+    @When("User sends a GET request")
+    public void user_sends_a_get_request() {
+        response = given()
+                .baseUri(BASE_URL)
+                .accept(ContentType.JSON)
+                .when()
+                .get(finalEndpoint)
+                .then()
+                .extract()
+                .response();
+
+        System.out.println("Response Body: " + response.getBody().asString());
+    }
+
+    @When("User sends a PUT request")
+    public void user_sends_a_put_request() {
+        response = given()
+                .baseUri(BASE_URL)
+                .contentType(ContentType.JSON)
+                .accept(ContentType.JSON)
+                .body(jsonTemplate)
+                .when()
+                .put(finalEndpoint)
+                .then()
+                .extract()
+                .response();
+
+        System.out.println("Response Body: " + response.getBody().asString());
+    }
+
+    @Then("the response should contains username {string}")
+    public void response_verify_username(String username) {
+        response.then()
+                .body("username", equalTo(username));
+             
+    }
+
+
+
 }
