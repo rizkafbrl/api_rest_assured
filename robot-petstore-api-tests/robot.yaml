@@ -1,0 +1,34 @@
+test_suite:
+  name: Pet Store API Tests
+  description: This suite contains tests for the Pet Store API, including adding pets and users, finding pets by status, and retrieving pets by ID.
+
+output:
+  directory: reports
+  logs: logs
+  report: reports/report.html
+
+variables:
+  - ${API_BASE_URL}: https://petstore.swagger.io/v2
+  - ${PET_ENDPOINT}: ${API_BASE_URL}/pet
+  - ${USER_ENDPOINT}: ${API_BASE_URL}/user
+
+test_cases:
+  - name: Add New Pet
+    tags: pets
+    file: tests/pets/add_new_pet.robot
+
+  - name: Add New User
+    tags: users
+    file: tests/users/add_new_user.robot
+
+  - name: Find Pets by Status (Available)
+    tags: pets
+    file: tests/pets/find_pets_by_status_available.robot
+
+  - name: Find Pets by Status (Pending)
+    tags: pets
+    file: tests/pets/find_pets_by_status_pending.robot
+
+  - name: Retrieve Pet by ID
+    tags: pets
+    file: tests/pets/retrieve_pet_by_id.robot
