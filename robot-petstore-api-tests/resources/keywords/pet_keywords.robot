@@ -65,7 +65,10 @@ Verify Pets Status
 
 Verify Pet By ID
     [Arguments]    ${response}    ${expected_id}
-    ${pet}=    Get Json Value    ${response.json()}    $[0]
+    ${pets}=    Get Json Value    ${response.json()}    $[*]
+    Run Keyword If    len(${pets}) == 0    Fail    No pets found in the response.
+    ${pet}=    Set Variable    ${pets}[0]
+    Log    Verifying pet: ${pet}    console=True
     Should Be Equal As Numbers    ${pet}[id]    ${expected_id}
     Should Not Be Empty    ${pet}[name]
     Should Not Be Empty    ${pet}[status]

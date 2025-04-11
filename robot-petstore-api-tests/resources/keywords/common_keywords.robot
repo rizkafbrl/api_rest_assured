@@ -17,4 +17,5 @@ Get Json Value
     [Arguments]        ${json_data}    ${json_path}
     [Documentation]    Extracts values from JSON data using a JSONPath expression.
     ${matches}=        Evaluate    [match.value for match in __import__('jsonpath_ng').parse("${json_path}").find(${json_data})]
+    Run Keyword If     len(${matches}) == 0    Fail    No matches found for JSONPath: ${json_path}
     RETURN             ${matches}
