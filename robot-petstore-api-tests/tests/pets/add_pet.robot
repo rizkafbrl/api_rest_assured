@@ -20,6 +20,7 @@ Add New Pet 2
 
 *** Keywords ***
 Add And Verify Pet
+    [Documentation]           This keywords will call the main keyword for add pet, this just the middle step that only used on this file
     [Arguments]               ${name}    ${status}
     Setup API Session
     Create Pet                ${name}    ${status}
