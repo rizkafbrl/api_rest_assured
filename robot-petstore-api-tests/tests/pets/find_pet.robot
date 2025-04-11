@@ -4,7 +4,7 @@ Resource          ../../resources/keywords/pet_keywords.robot
 *** Variables ***
 ${PENDING}          pending
 ${AVALIABLE}        available
-${PET_ID}           2
+${PET_ID}           1
 
 *** Test Cases ***
 Find Pets By Status (Pending)
