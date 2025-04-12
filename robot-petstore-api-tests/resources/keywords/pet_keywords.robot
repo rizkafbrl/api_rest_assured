@@ -5,12 +5,6 @@ Library                               OperatingSystem
 Resource                              api_keywords.robot
 Resource                              ../variables/common_variables.robot
 
-*** Variables ***
-${BASE_URL}                           https://petstore.swagger.io/v2
-${CREATE_PET_ENDPOINT}                ${BASE_URL}/pet
-${FIND_PETS_BY_STATUS_ENDPOINT}       ${BASE_URL}/pet/findByStatus
-${RETRIEVE_PET_BY_ID_ENDPOINT}        ${BASE_URL}/pet
-
 *** Keywords ***
 Send POST Request
     [Arguments]       ${endpoint}        ${data}
@@ -32,7 +26,7 @@ Create Pet
     ...    status=${status}
     ...    id=1234
     ...    category=${category}
-    ${response}=    Send POST Request    ${CREATE_PET_ENDPOINT}    ${payload}
+    ${response}=    Send POST Request    ${PET_ENDPOINT}    ${payload}
     Should Be Equal As Numbers    ${response.status_code}    200
 
 Verify Pet Created
